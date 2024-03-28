@@ -1,0 +1,37 @@
+{% extends "public/templates/base_template.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block main %}
+<div class="info-section">
+<div class="container mt-5 pt-5 mb-5 pb-5">
+  <div class="info-section single-section">
+    <div class="row align-items-center">
+
+      
+      
+      <!-- Picture part-->
+      <div class="col-12 col-lg-5 info-img"><img class="img-fluid img-thumbnail" src="{{ url_for('static',filename='images/logo_poltek.png') }}" alt="About Picture"></div>
+      <!-- Content part-->
+      <div class="col-12 col-lg-7 info-content">
+        <div class="content-block">
+          <h2 class="content-subtitle" style="color:#F53163">Kelompok 2 Golongan A</h2>
+          <h6 class="content-title" style="color:#F53163">Nama Anggota : 
+            <br>Babylina vindarosita (E41210096)
+            <br>Liza Indarwati (E41210022)
+            <br>Nihla Rizkiyah (E41210371)
+            <br>M. Farhan Abdillah (E41210004)
+            <br>Regina Juniantika (E41210026)</h6>
+          <div class="content-description">
+            <p>Projects pencarian produk ecommerce melalui visual search </p>
+          </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+{% endblock %}

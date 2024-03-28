@@ -1,0 +1,142 @@
+{% extends "public/templates/base_template.html" %} {% block title %}Home{% endblock %} {% block main %}
+<style>
+  .bg-white {
+    background-color: white;
+  }
+
+  /* Menambahkan gaya untuk mengatur sejajar */
+  .sections-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .section {
+    width: 45%; /* Atur lebar masing-masing section */
+  }
+</style>
+
+<div class="container p-5 mt-5 mb-5">
+  <div class="sections-container">
+    <div class="section">
+      <div class="p-5 bg-white shadow rounded-lg">
+        <img src="{{ url_for('static',filename='images/image-upload.png') }}" alt="" width="200" class="d-block mx-auto mb-4 rounded-pill" />
+        <!-- Default bootstrap file upload-->
+        <h6 class="text-center mb-4 text-muted">Upload Gambar yang ingin dicari..</h6>
+        <form action="/recommend" method="POST" enctype="multipart/form-data">
+          <div class="custom-file overflow-hidden rounded-pill mb-5">
+            <input id="image" name="image" type="file" class="custom-file-input rounded-pill" />
+            <label for="image" class="custom-file-label rounded-pill">Choose file</label>
+          </div>
+          <!-- End -->
+          <button type="submit" class="file-upload btn btn-first btn-block rounded-pill shadow" id="btn-indexsubmit" style="display: none">Upload</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="p-5 bg-white shadow rounded-lg">
+        <form action="/camera" method="POST">
+        <video id="live-camera" width="100%" height="auto" autoplay class="d-block mx-auto mb-4 rounded-pill"></video>
+        <h6 class="text-center mb-4 text-muted">Ambil foto dari live camera..</h6>
+        <button onclick="takePicture()" class="btn btn-first btn-block rounded-pill shadow">Ambil Foto</button>
+        <!-- <button type="submit" class="btn btn-first btn-block rounded-pill shadow" id="btn-indexsubmit" >Ambil Gambar</button> -->
+      </form>
+      </div>
+    </div>
+
+    <script>
+      async function startCamera() {
+        const constraints = {
+          video: true
+        };
+    
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          // const video = document.getElementById('live-camera');
+          const video = document.getElementById('live-camera');
+          video.srcObject = stream;
+        } catch (err) {
+          console.error('Error accessing the camera: ', err);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', startCamera);
+
+      function takePicture() {
+        const video = document.getElementById('live-camera');
+        // const video = document.getElementById('image');
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+    
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+        canvas.toBlob((blob) => {
+          const formData = new FormData();
+          formData.append('live-camera', blob, 'live-camera.png');
+          // formData.append('image', blob, 'live-camera.png');
+    
+          // Kirim blob ke server, misalnya menggunakan Fetch API atau XMLHttpRequest
+          fetch('/camera', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            // Lakukan sesuatu dengan respons dari server
+
+          })
+          .catch(error => {
+            console.error('Error uploading image: ', error);
+          });
+        }, 'image/png');
+      }
+      // Panggil fungsi startCamera() ketika halaman dimuat
+      // document.addEventListener('DOMContentLoaded', startCamera);
+    </script>
+
+    <!-- <div class="section">
+
+        <form action="/capture" method="POST" enctype="multipart/form-data">
+          <video id="live-camera" type="file" name="live-camera" autoplay playsinline width="500"></video>
+           <button id="capture-button" class="btn btn-first btn-block rounded-pill shadow" width="500" style="display: inline" >Capture</button>
+           <canvas id="snapshot" style="display: none;"></canvas>
+        </form>        
+    </div> -->
+
+    
+    <!-- <script>
+      const videoElement = document.getElementById('live-camera');
+      const captureButton = document.getElementById('capture-button');
+      const canvasElement = document.getElementById('snapshot');
+      const context = canvasElement.getContext('2d');
+    
+      // Mengakses kamera pengguna
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          videoElement.srcObject = stream;
+        })  
+        .catch((error) => {
+          console.error('Error accessing camera: ', error);
+        });
+    
+      // Menangkap gambar saat tombol 'Capture' ditekan
+      captureButton.addEventListener('click', () => {
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
+        context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    
+        // Simpan gambar dalam format Data URL
+        // const imageDataURL = canvasElement.toDataURL('data/input_image', 'input.jpg');
+
+        
+      });
+    </script> -->
+
+</div>
+</div>
+
+</div>
+</div>  
+{% endblock %}
